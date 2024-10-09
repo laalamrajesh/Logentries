@@ -137,25 +137,20 @@ else:
     class TLSSocketAppender(PlainTextSocketAppender):
 
         def open_connection(self):
+            # Create a socket
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock = ssl.wrap_socket(
-                sock=sock,
-                keyfile=None,
-                certfile=None,
-                server_side=False,
-                cert_reqs=ssl.CERT_REQUIRED,
-                ssl_version=getattr(
-                    ssl,
-                    'PROTOCOL_TLSv1_2',
-                    ssl.PROTOCOL_TLSv1
-                ),
-                ca_certs=certifi.where(),
-                do_handshake_on_connect=True,
-                suppress_ragged_eofs=True,
-            )
 
-            sock.connect((self.le_api, self.le_tls_port))
-            self._conn = sock
+            # Create an SSL context
+            context = ssl.create_default_context(cafile=certifi.where())
+            context.verify_mode = ssl.CERT_REQUIRED
+            context.minimum_version = ssl.TLSVersion.TLSv1_2
+
+            # Wrap the socket with SSL
+            ssock = context.wrap_socket(sock, server_hostname=self.le_api)
+
+            # Connect to the server
+            ssock.connect((self.le_api, self.le_tls_port))
+            self._conn = ssock
 
 
 class LogentriesHandler(logging.Handler):
