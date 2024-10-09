@@ -7,7 +7,7 @@ with open('README.rst', 'r') as f:
 
 setup(
     name='Logentries',
-    version='1.0',
+    version='0.17',
     author='Mark Lacomber',
     author_email='marklacomber@gmail.com',
     packages=['logentries'],
@@ -23,7 +23,6 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.12',
     ]
 )
